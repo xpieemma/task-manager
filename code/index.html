@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>Task Management</title>
+  </head>
+  <body>
+    <h1>Task Manager</h1>
+
+    <div class="hero">
+      <div class="input-group">
+        <div class="input-flex">
+          <label for="taskName">Task Name</label>
+          <input type="text" id="taskName" placeholder="e.g., Submit Report" />
+        </div>
+        <div class="input-flex">
+          <label for="taskCategory">Category</label>
+          <select id="taskCategory">
+            <option value="Work">Work</option>
+            <option value="Personal">Personal</option>
+            <option value="Study">Study</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="input-flex">
+          <label for="taskDeadLine">Deadline</label>
+          <input type="datetime-local" id="taskDeadLine" />
+        </div>
+        <button id="addBtn" class="btn">Add Task</button>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="filter-group">
+        <label for="filterSelect">Filter:</label>
+        <select id="filterSelect">
+          <option value="all">Show All</option>
+          <option value="Completed">Status: Completed</option>
+          <option value="In Progress">Status: In Progress</option>
+          <option value="Overdue">Status: Overdue</option>
+          <option value="Work">Category: Work</option>
+          <option value="Personal">Category: Personal</option>
+          <option value="Study">Category: Study</option>
+          <option value="Other">Category: Other</option>
+        </select>
+      </div>
+      <button id="sortBtn" class="btn">Sort by Deadline</button>
+    </div>
+    <table class="task-table">
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Category</th>
+          <th>Deadline</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="taskListBody"></tbody>
+    </table>
+    <script src="./logic.js"></script>
+    <script src="./ui.js"></script>
+    <script src="./test.js"></script>
+  </body>
+</html>
