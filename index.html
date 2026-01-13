@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./styles.css" />
     <title>Task Management</title>
   </head>
   <body>
@@ -42,21 +42,23 @@
           <option value="Overdue">Status: Overdue</option>
           <option value="Work">Category: Work</option>
           <option value="Personal">Category: Personal</option>
+          <option value="Study">Category: Study</option>
+          <option value="Other">Category: Other</option>
         </select>
       </div>
       <button id="sortBtn" class="btn">Sort by Deadline</button>
     </div>
     <table class="task-table">
-        <thead>
-            <tr>
-                <th>Task</th>
-                <th>Category</th>
-                <th>Deadline</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="taskListBody"></tbody>
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Category</th>
+          <th>Deadline</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="taskListBody"></tbody>
     </table>
     <script src="./logic.js"></script>
   </body>
