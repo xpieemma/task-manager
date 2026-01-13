@@ -48,12 +48,17 @@ h1 {
   justify-content: space-between;
   margin-bottom: 16px;
 }
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
 input,
 select,
 button {
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #cccacc;
   border-radius: 4px;
   font-size: 14px;
 }
@@ -90,7 +95,7 @@ td {
 }
 
 th {
-  background-color: #f1f1f1;
+  background: #f1f1f1;
   font-weight: 600;
 }
 .status-InProgress {
@@ -104,3 +109,14 @@ th {
   color: #dc3545;
   font-weight: bold;
 }
+.category-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    background: #e9ecef;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #495057;
+}
+
+
