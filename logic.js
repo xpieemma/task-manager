@@ -110,4 +110,44 @@ if (task.status !== 'Completed' && deadlineDate < now){
 // console.log("Delete Task Result:");
 // console.table(state);
 
+const sortByDeadline = (tasks) => {
+  const sorted = [];
+  for (anyTask in tasks){
+    sorted.push(anyTask);
+  }
+  for (let i = 0; i<sorted.length-1; i++) {
+    for (let z = 0; z<sorted.length-1 -i; z++){
+      const date1 = new Date(sorted[z].deadline);
+      const date2 = new Date(sorted[z+1].deadline);
+      if (date1 > date2) {
+        const temp = sorted[z];
+        sorted[z] = sorted[z+1];
+        sorted[z+1] = temp;
+      }
+    }
 
+  }
+  return sorted;
+};
+
+// check the functions
+let state = [];
+
+console.log ("%c ---- Adding tasks ----", "color : purple; font-weight bold");
+state = addTask(state, "Old Task (Overdue)", "Work", "2020-01-01");
+state = addTask(state, "Future Task", "Home", "2030-12-31");
+state = addTask(state, "Mid Task", "Urgent", "2025-06-15");
+console.table(state);
+
+console.log("%c---CHECKING OVERDUE ---", "color: orange; font-weight: bold");
+state = checkOverdue(state);
+console.table(state);
+
+console.log("%c--- SORTING BY DATE ---", "color: lightgreen; font-weight: bold");
+state = sortByDeadline(state);
+console.table(state);
+
+console.log("%c---UPDATE STATUS ---", "color: yellow; font-weight: bold");
+// Update the first item in the sorted list
+state = updateStatus(state, state[0].id, "Completed");
+console.table(state);
