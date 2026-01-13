@@ -53,17 +53,26 @@ const updateStatus = (tasks, taskId, newStatus) => {
 const checkOverdue = (tasks) => {
   const now = new Date();
   const newTasks = [];
+
   for (let i = 0; i < tasks.length; i++) {
     const task = tasks[i];
-    const deadlineDate = new Date(task.deadline);
-    if (task.status === "Overdue" && deadlineDate >= now) {
-      newTasks.push({ ...task, status: "In Progress" });
-    } else if (task.status !== "Completed" && deadlineDate < now) {
+
+    if (task.status === "Completed") {
+      newTasks.push(task);
+      continue;
+    }
+
+    const isPastDeadline = new Date(task.deadline) < now;
+
+    if (isPastDeadline && task.status !== "Overdue") {
       newTasks.push({ ...task, status: "Overdue" });
+    } else if (!isPastDeadline && task.status === "Overdue") {
+      newTasks.push({ ...task, status: "In Progress" });
     } else {
       newTasks.push(task);
     }
   }
+
   return newTasks;
 };
 
@@ -111,7 +120,9 @@ const checkOverdue = (tasks) => {
 // };
 
 const sortByDeadline = (tasks) => {
-  return [...tasks].sort((a, b) => Date.parse(a.deadline) - Date.parse(b.deadline));
+  return [...tasks].sort(
+    (a, b) => Date.parse(a.deadline) - Date.parse(b.deadline)
+  );
 };
 
 // // check the functions
@@ -136,19 +147,13 @@ const sortByDeadline = (tasks) => {
 // state = updateStatus(state, state[0].id, "Completed");
 // console.table(state);
 
-
-
-
-
-
 let appState = [];
 let isSorted = false;
-
 
 const filterTasks = (tasks, filterValue) => {
   if (filterValue === "all") return tasks;
   const filtered = [];
-  for (let i=0; i<tasks.length; i++){
+  for (let i = 0; i < tasks.length; i++) {
     const task = tasks[i];
     if (task.status === filterValue || task.category === filterValue) {
       filtered.push(task);
@@ -159,8 +164,6 @@ const filterTasks = (tasks, filterValue) => {
 
 let currentFilter = "all";
 
-
-
 const displayTasks = () => {
   // check for overdu items first
   appState = checkOverdue(appState);
@@ -168,16 +171,12 @@ const displayTasks = () => {
   const tbody = document.getElementById("taskListBody");
   tbody.innerHTML = "";
 
-//tasks after filtering
+  //tasks after filtering
   let tasksToShow = filterTasks(appState, currentFilter);
-//sort if needed 
-if (isSorted){
-
-  tasksToShow = sortByDeadline(tasksToShow);
-}
-
-  
-
+  //sort if needed
+  if (isSorted) {
+    tasksToShow = sortByDeadline(tasksToShow);
+  }
 
   for (const task of tasksToShow) {
     const tr = document.createElement("tr");
@@ -218,8 +217,6 @@ if (isSorted){
   }
 };
 
-
-
 const handleStatusChange = (id, status) => {
   appState = updateStatus(appState, id, status);
   displayTasks();
@@ -253,8 +250,76 @@ window.onload = () => {
   };
 
   document.getElementById("filterSelect").onchange = (e) => {
-  currentFilter = e.target.value;
+    currentFilter = e.target.value;
+    displayTasks();
+  };
   displayTasks();
 };
-  displayTasks();
-};
+
+//test
+setTimeout(() => {
+  console.log("Starting Tests...\n");
+
+  const emptyState = [];
+  const added = addTask(emptyState, "Test Task", "Work", "2030-01-01");
+
+  console.assert(emptyState.length === 0, "Add mutated original array");
+  console.assert(added.length === 1, "Add failed");
+  console.assert(
+    added[0].status === "In Progress",
+    "Default status incorrect"
+  );
+
+  console.log(" Add Task (Immutable): PASS");
+
+ 
+  const taskId = added[0].id;
+  const updated = updateStatus(added, taskId, "Completed");
+
+  console.assert(
+    added[0].status === "In Progress",
+    "Update mutated original task"
+  );
+  console.assert(updated[0].status === "Completed", "Status not updated");
+
+  console.log(" Update Status (Immutable): PASS");
+
+
+  const deleted = deleteTask(updated, taskId);
+
+  console.assert(updated.length === 1, "Delete mutated original array");
+  console.assert(deleted.length === 0, "Delete failed");
+
+  console.log("Delete Task (Immutable): PASS");
+
+
+  let overdueState = [];
+  overdueState = addTask(overdueState, "Past Task", "Work", "2020-01-01");
+  overdueState = addTask(overdueState, "Future Task", "Work", "2030-01-01");
+
+  const checked = checkOverdue(overdueState);
+
+  console.assert(
+    checked[0].status === "Overdue",
+    "Past task not marked overdue"
+  );
+  console.assert(
+    checked[1].status === "In Progress",
+    "Future task incorrectly marked"
+  );
+
+  console.log("Overdue Check: PASS");
+
+ 
+  const sorted = sortByDeadline(checked);
+
+  console.assert(
+    new Date(sorted[0].deadline) <= new Date(sorted[1].deadline),
+    " Sorting by deadline failed"
+  );
+
+  console.log("Sort by Deadline: PASS");
+
+  console.log("\n All Tests Passed");
+  console.groupEnd();
+}, 300);
