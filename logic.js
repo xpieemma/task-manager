@@ -46,16 +46,68 @@ for (let i = 0; i < tasks.length; i++){
 return newTasks;
 };
 
-let state = [];
-state = addTask(state, "Buy Milk", "Groceries", "2024-01-20");
-state = addTask(state, "Clean Room", "Chores", "2024-01-21");
-console.log("Add Tasks Result:", state);
+// let state = [];
+// state = addTask(state, "Buy Milk", "Groceries", "2024-01-20");
+// state = addTask(state, "Clean Room", "Chores", "2024-01-21");
+// console.log("Add Tasks Result:", state);
 
-// Update Status (using the ID of the first task)
-const firstId = state[0].id;
-state = updateStatus(state, firstId, "Completed");
-console.log("2. Update Status Result:", state);
+// // Update Status (using the ID of the first task)
+// const firstId = state[0].id;
+// state = updateStatus(state, firstId, "Completed");
+// console.log("2. Update Status Result:", state);
 
-// Delete Task
-state = deleteTask(state, firstId);
-console.log("Delete Task Result (Should be 1 left):", state);
+// // Delete Task
+// state = deleteTask(state, firstId);
+// console.log("Delete Task Result (Should be 1 left):", state);
+
+//-----Check Overdue
+const checkOverdue = (tasks) =>{
+    const now = new Date();
+    const newTasks = [];
+    for (let i =0; i < tasks.length; i++){
+const task = tasks[i];
+const deadlineDate = new Date(task.deadline);
+
+if (task.status !== 'Completed' && deadlineDate < now){
+    const overdueTask ={
+        id : task.id,
+        name: task.name,
+        category: task.category,
+        deadline: task.deadline,
+        status: 'Overdue'
+    };
+    newTasks.push(overdueTask);
+} else {
+    newTasks.push(task);
+}
+    }
+    return newTasks;
+
+};
+
+// //data to test 
+// let state = [];
+
+// // Add Tasks (One is late, one is future)
+// state = addTask(state, "Buy Milk (LATE)", "Groceries", "2020-01-20");
+// state = addTask(state, "Clean Room (FUTURE)", "Chores", "2030-01-21");
+// console.log("Add Tasks Result:");
+// console.table(state);
+
+// // Check Overdue 
+// state = checkOverdue(state);
+// console.log("Check Overdue Result:");
+// console.table(state);
+
+// // Update Status (Finish the first task)
+// const firstId = state[0].id;
+// state = updateStatus(state, firstId, "Completed");
+// console.log("Update Status Result :");
+// console.table(state);
+
+// // Delete Task
+// state = deleteTask(state, firstId);
+// console.log("Delete Task Result:");
+// console.table(state);
+
+
