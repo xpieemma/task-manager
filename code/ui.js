@@ -1,6 +1,4 @@
-let appState = [];
-let isSorted = false;
-let currentFilter = "all";
+
 
 const filterTasks = (tasks, filterValue) => {
   if (filterValue === "all") return tasks;
@@ -18,6 +16,7 @@ const filterTasks = (tasks, filterValue) => {
 const displayTasks = () => {
   // check for overdu items first
   appState = checkOverdue(appState);
+  saveToStorage(appState);
 
   const tbody = document.getElementById("taskListBody");
   tbody.innerHTML = "";
@@ -70,22 +69,25 @@ const displayTasks = () => {
 
 const handleStatusChange = (id, status) => {
   appState = updateStatus(appState, id, status);
+  saveToStorage(appState)
   displayTasks();
 };
 
 const handleDelete = (id) => {
   appState = deleteTask(appState, id);
+  saveToStorage(appState);
   displayTasks();
 };
 
-window.onload = () => {
-  document.getElementById("addBtn").onclick = () => {
-    const name = document.getElementById("taskName").value;
-    const cat = document.getElementById("taskCategory").value;
-    const date = document.getElementById("taskDeadLine").value;
+document.getElementById("addBtn").onclick = () => {
+  const name = document.getElementById("taskName").value;
+  const cat = document.getElementById("taskCategory").value;
+  const date = document.getElementById("taskDeadLine").value;
+
 
     if (name !== "" && date !== "") {
       appState = addTask(appState, name, cat, date);
+      saveToStorage(appState);
       displayTasks();
       document.getElementById("taskName").value = "";
     } else {
@@ -104,5 +106,19 @@ window.onload = () => {
     currentFilter = e.target.value;
     displayTasks();
   };
-  displayTasks();
+ 
+
+const STORAGE_KEY = "task-manager-state";
+
+const saveToStorage = (tasks) => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
 };
+
+const loadFromStorage = () => {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  return stored ? JSON.parse(stored) : [];
+};
+
+let appState = loadFromStorage();
+let isSorted = false;
+let currentFilter = "all";
